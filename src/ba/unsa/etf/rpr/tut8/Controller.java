@@ -41,7 +41,32 @@ public class Controller {
         this.query.set(query);
     }
 
+    public ArrayList<File> findMatchingFiles(String substr) {
+        ArrayList<File> results = new ArrayList<>();
+        File home_dr = new File(HOME_DIRECTORY);
+        traverseFiles(substr, results, home_dr);
 
+        return results;
+    }
 
-
+    private void traverseFiles(String substr, ArrayList<File> results, File directory) { // Pre-order traversal
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return;
+        }
+        for (File f : files) {
+            if (f.isFile()) {
+                /*if (f.getParentFile().getAbsolutePath().equals("C:\\Users\\Dell\\Desktop")) {
+                    System.out.println(f.getAbsoluteFile());
+                }*/
+                if (f.getName().contains(substr)) {
+                    System.out.println(f.getName());
+                    results.add(f);
+                }
+            } else { // if f is a directory
+                System.out.println(f.getAbsolutePath());
+                traverseFiles(substr, results, f);
+            }
+        }
+    }
 }
