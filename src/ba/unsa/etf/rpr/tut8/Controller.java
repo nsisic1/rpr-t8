@@ -56,15 +56,10 @@ public class Controller {
         }
         for (File f : files) {
             if (f.isFile()) {
-                /*if (f.getParentFile().getAbsolutePath().equals("C:\\Users\\Dell\\Desktop")) {
-                    System.out.println(f.getAbsoluteFile());
-                }*/
                 if (f.getName().contains(substr)) {
-                    System.out.println(f.getName());
                     results.add(f);
                 }
             } else { // if f is a directory
-                System.out.println(f.getAbsolutePath());
                 traverseFiles(substr, results, f);
             }
         }
