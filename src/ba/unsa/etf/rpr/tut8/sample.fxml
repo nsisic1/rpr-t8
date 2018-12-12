@@ -30,7 +30,7 @@
          <children>
             <Label text="Uzorak: " />
             <TextField fx:id="queryTextField" GridPane.columnIndex="1" />
-            <Button fx:id="traziBtn" mnemonicParsing="false" text="Trazi" GridPane.columnIndex="2" />
+            <Button fx:id="traziBtn" mnemonicParsing="false" onAction="#traziClick" text="Trazi" GridPane.columnIndex="2" />
          </children>
          <GridPane.margin>
             <Insets />
