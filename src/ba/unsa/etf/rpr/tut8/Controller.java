@@ -37,6 +37,7 @@ public class Controller {
     public void initialize() {
         queryTextField.textProperty().bindBidirectional(query);
         lista.itemsProperty().bind(listProperty);
+        prekiniBtn.setDisable(true);
     }
 
 
@@ -61,6 +62,12 @@ public class Controller {
         };
         Thread thread = new Thread(run);
         thread.start();
+    }
+
+    public void prekiniClick(ActionEvent actionEvent) {
+        searchNumber++;
+        traziBtn.setDisable(false);
+        prekiniBtn.setDisable(true);
     }
 
     private void findMatchingFiles(String substr){
