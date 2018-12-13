@@ -20,6 +20,7 @@ public class Controller {
     public Button traziBtn;
     public TextField queryTextField;
     public ListView<String> lista;
+    public Button prekiniBtn;
 
     private SimpleStringProperty query;
     private ListProperty<String> listProperty;
@@ -54,6 +55,8 @@ public class Controller {
     public void traziClick(ActionEvent actionEvent) {
         System.out.println(getQuery());
         Runnable run = () -> {
+            traziBtn.setDisable(true);
+            prekiniBtn.setDisable(false);
             findMatchingFiles(getQuery());
         };
         Thread thread = new Thread(run);
@@ -68,6 +71,8 @@ public class Controller {
         try {
             traverseFiles(substr, home_dr, searchNumber);
             searchNumber = 0;
+            traziBtn.setDisable(false);
+            prekiniBtn.setDisable(true);
             System.out.println("Pretraga zavrsena");
         } catch (Exception e) {
 
