@@ -17,7 +17,6 @@ public class Controller {
 
     private final String HOME_DIRECTORY = "C:\\Users";
 
-    // da nije public morali bi staviti @FXML?
     public Button traziBtn;
     public TextField queryTextField;
     public ListView<String> lista;
@@ -29,8 +28,7 @@ public class Controller {
 
     public Controller() {
         query = new SimpleStringProperty("Ab");
-        // listProperty = new SimpleListProperty<>();
-        listProperty = new SimpleListProperty<>(FXCollections.observableArrayList()); // https://stackoverflow.com/questions/24430191/is-there-a-changeable-listproperty-in-javafx
+        listProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
         searchNumber = 0;
     }
 
@@ -62,13 +60,10 @@ public class Controller {
         thread.start();
     }
 
-    private ArrayList<String> findMatchingFiles(String substr){
+    private void findMatchingFiles(String substr){
         System.out.println("Potraga zapoceta " + substr);
-        ArrayList<String> results = new ArrayList<>();
         File home_dr = new File(HOME_DIRECTORY);
         Platform.runLater(() -> listProperty.clear());
-        /*System.out.println(lista.getItems());
-        lista.getItems().clear();*/  // baca null, prije listPropertija nije to radilo
         searchNumber++;
         try {
             traverseFiles(substr, home_dr, searchNumber);
@@ -79,11 +74,9 @@ public class Controller {
         }
 
         System.out.println("Pretraga prekinuta");
-        return results;
     }
 
     private void traverseFiles(String substr, File directory, int currentSearchNumber) throws Exception { // Pre-order traversal
-        // System.out.println(1);
         File[] files = directory.listFiles();
         if (files == null) {
             return;
@@ -95,7 +88,7 @@ public class Controller {
             if (f.isFile()) {
                 if (f.getName().contains(substr)) {
                     System.out.println(f.getName());
-                    Platform.runLater(() -> listProperty.add(f.getAbsolutePath())); // https://stackoverflow.com/a/21119757 i u predavanjima
+                    Platform.runLater(() -> listProperty.add(f.getAbsolutePath()));
                 }
             } else { // if f is a directory
                 traverseFiles(substr, f, currentSearchNumber);
