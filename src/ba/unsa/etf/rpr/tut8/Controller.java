@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 
 import java.io.File;
@@ -21,6 +22,7 @@ public class Controller {
     public TextField queryTextField;
     public ListView<String> lista;
     public Button prekiniBtn;
+    public ProgressIndicator progIndicator;
 
     private SimpleStringProperty query;
     private ListProperty<String> listProperty;
@@ -38,6 +40,7 @@ public class Controller {
         queryTextField.textProperty().bindBidirectional(query);
         lista.itemsProperty().bind(listProperty);
         prekiniBtn.setDisable(true);
+        progIndicator.setVisible(false);
     }
 
 
@@ -56,6 +59,7 @@ public class Controller {
     public void traziClick(ActionEvent actionEvent) {
         System.out.println(getQuery());
         Runnable run = () -> {
+            progIndicator.setVisible(true);
             traziBtn.setDisable(true);
             prekiniBtn.setDisable(false);
             findMatchingFiles(getQuery());
@@ -68,6 +72,7 @@ public class Controller {
         searchNumber++;
         traziBtn.setDisable(false);
         prekiniBtn.setDisable(true);
+        progIndicator.setVisible(false);
     }
 
     private void findMatchingFiles(String substr){
@@ -76,10 +81,13 @@ public class Controller {
         Platform.runLater(() -> listProperty.clear());
         searchNumber++;
         try {
+            // Vrsenje pretrage
             traverseFiles(substr, home_dr, searchNumber);
+            // Kada je zavrsila pretraga
             searchNumber = 0;
             traziBtn.setDisable(false);
             prekiniBtn.setDisable(true);
+            progIndicator.setVisible(false);
             System.out.println("Pretraga zavrsena");
         } catch (Exception e) {
 
