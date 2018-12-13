@@ -65,7 +65,6 @@ public class Controller {
     }
 
     public void traziClick(ActionEvent actionEvent) {
-        System.out.println(getQuery());
         Runnable run = () -> {
             progIndicator.setVisible(true);
             traziBtn.setDisable(true);
@@ -84,7 +83,6 @@ public class Controller {
     }
 
     private void findMatchingFiles(String substr){
-        System.out.println("Potraga zapoceta " + substr);
         File home_dr = new File(HOME_DIRECTORY);
         Platform.runLater(() -> listProperty.clear());
         searchNumber++;
@@ -96,12 +94,10 @@ public class Controller {
             traziBtn.setDisable(false);
             prekiniBtn.setDisable(true);
             progIndicator.setVisible(false);
-            System.out.println("Pretraga zavrsena");
         } catch (Exception e) {
 
         }
 
-        System.out.println("Pretraga prekinuta");
     }
 
     private void traverseFiles(String substr, File directory, int currentSearchNumber) throws Exception { // Pre-order traversal
@@ -115,7 +111,6 @@ public class Controller {
             }
             if (f.isFile()) {
                 if (f.getName().contains(substr)) {
-                    System.out.println(f.getName());
                     Platform.runLater(() -> listProperty.add(f.getAbsolutePath()));
                 }
             } else { // if f is a directory

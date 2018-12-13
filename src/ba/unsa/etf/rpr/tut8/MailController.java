@@ -92,7 +92,6 @@ public class MailController {
 
     public void postanskiBrojValidation() {
         postanskiBrojField.getStyleClass().add("poljeNijeIspravno");
-        System.out.println(22222222);
         postanskiBrojField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 if (!newValue) {
@@ -114,11 +113,9 @@ public class MailController {
 
     public void updateField(String newValue) throws Exception {
         if (validanPostanskiBroj(getPostanskiBroj())) {
-            System.out.println("True");
             postanskiBrojField.getStyleClass().removeAll("poljeNijeIspravno");
             postanskiBrojField.getStyleClass().add("poljeIspravno");
         } else {
-            System.out.println("False");
             postanskiBrojField.getStyleClass().removeAll("poljeIspravno");
             postanskiBrojField.getStyleClass().add("poljeNijeIspravno");
         }
@@ -127,7 +124,6 @@ public class MailController {
 
 
     public boolean validanPostanskiBroj(String s) throws Exception {
-        System.out.println("Aaaaaa");
         URL url = new URL("http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=" + getPostanskiBroj());
         BufferedReader ulaz = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         String json = "", line = null;
