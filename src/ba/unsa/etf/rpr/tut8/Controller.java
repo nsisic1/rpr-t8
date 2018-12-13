@@ -1,5 +1,6 @@
 package ba.unsa.etf.rpr.tut8;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,15 +25,13 @@ public class Controller {
     private SimpleStringProperty query;
     private ListProperty<String> listProperty;
 
-
-    /*private ObservableList<String> items = FXCollections.observableArrayList(); // ili <File> ?; instanciranje se vrsi
-        // pozivom staticne metode koja vraca objekat
-    private ObjectProperty<String> file = new SimpleObjectProperty<>(); // ili <File> ?*/
+    private int searchNumber;
 
     public Controller() {
         query = new SimpleStringProperty("Ab");
         // listProperty = new SimpleListProperty<>();
-        listProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+        listProperty = new SimpleListProperty<>(FXCollections.observableArrayList()); // https://stackoverflow.com/questions/24430191/is-there-a-changeable-listproperty-in-javafx
+        searchNumber = 0;
     }
 
     @FXML
@@ -56,39 +55,50 @@ public class Controller {
 
     public void traziClick(ActionEvent actionEvent) {
         System.out.println(getQuery());
-        findMatchingFiles(getQuery());
+        Runnable run = () -> {
+            findMatchingFiles(getQuery());
+        };
+        Thread thread = new Thread(run);
+        thread.start();
     }
 
-    private ArrayList<String> findMatchingFiles(String substr) {
+    private ArrayList<String> findMatchingFiles(String substr){
         System.out.println("Potraga zapoceta " + substr);
         ArrayList<String> results = new ArrayList<>();
         File home_dr = new File(HOME_DIRECTORY);
-        listProperty.clear();
+        Platform.runLater(() -> listProperty.clear());
         /*System.out.println(lista.getItems());
         lista.getItems().clear();*/  // baca null, prije listPropertija nije to radilo
-        traverseFiles(substr, results, home_dr);
+        searchNumber++;
+        try {
+            traverseFiles(substr, home_dr, searchNumber);
+            searchNumber = 0;
+            System.out.println("Pretraga zavrsena");
+        } catch (Exception e) {
 
+        }
+
+        System.out.println("Pretraga prekinuta");
         return results;
     }
 
-    private void traverseFiles(String substr, ArrayList<String> results, File directory) { // Pre-order traversal
+    private void traverseFiles(String substr, File directory, int currentSearchNumber) throws Exception { // Pre-order traversal
+        // System.out.println(1);
         File[] files = directory.listFiles();
         if (files == null) {
             return;
         }
         for (File f : files) {
-            /*if (f.getName().contains(substr)) {
-                //
-            }*/
+            if (currentSearchNumber != searchNumber) {
+                throw new Exception();
+            }
             if (f.isFile()) {
                 if (f.getName().contains(substr)) {
                     System.out.println(f.getName());
-                    listProperty.add(f.getName());
-                    // lista.getItems().add(f.getName()); nakon sto smo napisali "listProperty = new SimpleListProperty<>(FXCollections.observableArrayList());" radi i ovo
-                    // results.add(f.getName());
+                    Platform.runLater(() -> listProperty.add(f.getAbsolutePath())); // https://stackoverflow.com/a/21119757 i u predavanjima
                 }
             } else { // if f is a directory
-                traverseFiles(substr, results, f);
+                traverseFiles(substr, f, currentSearchNumber);
             }
         }
     }
